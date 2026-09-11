@@ -569,8 +569,8 @@ function viewInput(id, query) {
     root.innerHTML = `${topbar(`${name}의 안 되는 시간`, `#/s/${session.id}`, periodLabel(session))}
       ${steps(2)}
       ${noticeBoard(session)}
-      <div class="notice">기본은 <b>가능</b>입니다. <b>안 되는 날/시간만</b> 표시해 주세요.<br>
-      평일은 한 번 누르면 그날 불가, 주말·공휴일은 눌러서 시간을 골라요.</div>
+      <div class="notice">• 기본은 <b>가능</b>입니다.<br> •<b>안 되는 날/시간만</b> 표시해 주세요.<br>
+      • 평일은 한 번 누르면 그날 불가<br> •주말·공휴일은 눌러서 시간을 골라요.</div>
       <div class="legend"><span><i class="free"></i>가능</span><span><i class="na"></i>불가</span><span><i class="partial"></i>일부 불가</span></div>
       <div id="cal"></div>
       <div class="sticky"><div class="inner"><button id="clear">모두 지우기</button><button class="primary" id="save">저장</button></div></div>`;
