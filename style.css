@@ -106,7 +106,7 @@ label.field span { display: block; font-size: var(--text-body-3); font-weight: 5
 .notice b { color: var(--color-fg); }
 .notice.ok { background: var(--color-brand-weak); color: var(--color-fg); }
 .empty { text-align: center; padding: var(--space-10) var(--space-4); color: var(--color-fg-tertiary); font-size: var(--text-body-2); }
-.board { background: var(--color-bg-secondary); border-radius: var(--radius-m); padding: var(--space-3) var(--space-4); margin: 0 0 var(--space-4); }
+.board { background: var(--color-brand); border-radius: var(--radius-m); padding: var(--space-3) var(--space-4); margin: 0 0 var(--space-4); }
 .board-text { white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--text-body-2); margin-top: var(--space-1); }
 
 /* 홈: 다음 합주 (노란 히어로 블록, radius 32) */
