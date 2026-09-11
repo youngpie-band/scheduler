@@ -90,6 +90,15 @@ function noticeBoard(session, editable = false) {
     ${body}
   </div>`;
 }
+// 멤버 한마디 목록 (공지사항처럼 사람당 하나씩, unavailable 저장할 때 같이 저장됨)
+function commentsBoard(members) {
+  const entries = Object.entries(members).filter(([, m]) => m && m.comment && m.comment.trim());
+  if (!entries.length) return '';
+  return `<div class="board comments">
+    <span class="mono">멤버 한마디</span>
+    <ul class="comment-list">${entries.map(([n, m]) => `<li><b>${esc(n)}</b> ${esc(m.comment)}</li>`).join('')}</ul>
+  </div>`;
+}
 function bindNoticeEditor(root, session) {
   const btn = root.querySelector('#editNotice');
   if (!btn) return;
@@ -438,6 +447,7 @@ function viewSession(id, admin = false) {
         ${progress(names.length, count)}
         <div class="chips" id="names"></div>
         ${names.length ? '<p class="muted">이름을 누르면 그 사람 입력을 수정할 수 있어요.</p>' : '<p class="muted">아직 아무도 입력하지 않았어요. 링크를 보내 주세요.</p>'}
+        ${commentsBoard(members)}
         <div class="actions" style="margin-top:8px">
           ${admin ? '' : mine
             ? `<button id="me" ${session.confirmed ? 'disabled' : ''}>내 입력 수정</button>`
@@ -561,6 +571,7 @@ function viewInput(id, query) {
       localStorage.setItem('band-my-name', name);
       data = JSON.parse(JSON.stringify(members[name] || { unavailable: {} }));
       data.unavailable = data.unavailable || {};
+      data.comment = data.comment || '';
       started = true; renderGrid();
     };
   };
@@ -573,6 +584,7 @@ function viewInput(id, query) {
       • 평일은 한 번 누르면 그날 불가<br> • 주말·공휴일은 안되는 시간까지!</div>
       <div class="legend"><span><i class="free"></i>가능</span><span><i class="na"></i>불가</span><span><i class="partial"></i>일부 불가</span></div>
       <div id="cal"></div>
+      <label class="field"><span>한마디 (선택, 최대 100자)</span><textarea id="comment" rows="2" maxlength="100" placeholder="예: 이번 주말엔 늦게 도착해요"></textarea></label>
       <div class="sticky"><div class="inner"><button id="clear">모두 지우기</button><button class="primary" id="save">저장</button></div></div>`;
     const draw = () => renderCalendar(root.querySelector('#cal'), session, {
       cell: (date, kind) => {
@@ -589,9 +601,11 @@ function viewInput(id, query) {
       },
     });
     draw();
+    root.querySelector('#comment').value = data.comment || '';
     root.querySelector('#clear').onclick = () => { data.unavailable = {}; draw(); };
     root.querySelector('#save').onclick = async (e) => {
       if (session.confirmed) { toast('이미 확정되어 저장할 수 없어요'); return go(`#/s/${session.id}`); }
+      data.comment = root.querySelector('#comment').value.trim();
       await busy(e.currentTarget, '저장 중…', () => safe(store.setMember(session.id, name, data)));
       done = true; renderDone();
     };
