@@ -90,14 +90,16 @@ function noticeBoard(session, editable = false) {
     ${body}
   </div>`;
 }
-// 멤버 한마디 목록 (공지사항처럼 사람당 하나씩, unavailable 저장할 때 같이 저장됨)
-function commentsBoard(members) {
+// 멤버 한마디 패널 (공지사항처럼 사람당 하나씩, unavailable 저장할 때 같이 저장됨)
+function commentsPanel(members) {
   const entries = Object.entries(members).filter(([, m]) => m && m.comment && m.comment.trim());
   if (!entries.length) return '';
-  return `<div class="board comments">
-    <span class="mono">멤버 한마디</span>
-    <ul class="comment-list">${entries.map(([n, m]) => `<li><b>${esc(n)}</b> ${esc(m.comment)}</li>`).join('')}</ul>
-  </div>`;
+  return `<h2>멤버 한마디</h2>
+    <ul class="comments-panel">${entries.map(([n, m]) => `
+      <li class="comment-item">
+        <span class="comment-avatar" aria-hidden="true">${esc([...n][0] || '?')}</span>
+        <div class="comment-body"><b class="comment-name">${esc(n)}</b><p class="comment-text">${esc(m.comment)}</p></div>
+      </li>`).join('')}</ul>`;
 }
 function bindNoticeEditor(root, session) {
   const btn = root.querySelector('#editNotice');
@@ -447,7 +449,6 @@ function viewSession(id, admin = false) {
         ${progress(names.length, count)}
         <div class="chips" id="names"></div>
         ${names.length ? '<p class="muted">이름을 누르면 그 사람 입력을 수정할 수 있어요.</p>' : '<p class="muted">아직 아무도 입력하지 않았어요. 링크를 보내 주세요.</p>'}
-        ${commentsBoard(members)}
         <div class="actions" style="margin-top:8px">
           ${admin ? '' : mine
             ? `<button id="me" ${session.confirmed ? 'disabled' : ''}>내 입력 수정</button>`
@@ -455,6 +456,7 @@ function viewSession(id, admin = false) {
           <button id="copy">링크 복사</button>
         </div>
       </div>
+      ${commentsPanel(members)}
       ${admin ? `<h2>보관 · 삭제</h2>
       <p class="muted">보관하면 목록에서 숨겨지고 "보관함 보기"에서 다시 볼 수 있어요. 삭제는 되돌릴 수 없어요.</p>
       <div class="row"><button class="ghost" id="archive">${session.archived ? '보관 해제' : '보관하기'}</button><button class="ghost danger" id="delete">취합 삭제</button></div>` : ''}`;
