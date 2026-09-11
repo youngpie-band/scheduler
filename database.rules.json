@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "sessions": {
+      ".read": true,
+      "$id": {
+        ".write": true,
+        ".validate": "newData.hasChildren([\"id\", \"title\", \"start\", \"end\"]) || !newData.exists()"
+      }
+    },
+    "members": {
+      ".read": true,
+      "$id": {
+        ".write": "!newData.exists() && !root.child(\"sessions\").child($id).exists()",
+        "$name": {
+          ".write": "newData.exists()",
+          ".validate": "newData.hasChild(\"unavailable\") || newData.hasChild(\"updatedAt\")"
+        }
+      }
+    }
+  }
+}

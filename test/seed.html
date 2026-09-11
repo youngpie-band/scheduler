@@ -1,0 +1,32 @@
+<!doctype html><meta charset="utf-8">
+<p id="msg" style="font-family:sans-serif;padding:16px"></p>
+<script type="module">
+// 개발용: 로컬 저장 모드(firebaseConfig = null)일 때만 샘플 데이터를 심고 결과 화면으로 이동한다.
+// 사용: test/seed.html?go=session | input | list | alt
+import { firebaseConfig } from '../js/config.js';
+const msg = document.getElementById('msg');
+if (firebaseConfig) {
+  msg.textContent = 'Firebase 모드에서는 샘플 데이터를 쓰지 않습니다. js/config.js의 firebaseConfig를 null로 두면 로컬 모드로 동작합니다.';
+} else {
+  const sid = 'demo01';
+  const db = {
+    sessions: { [sid]: { id: sid, title: '2026년 10월 합주', start: '2026-10-01', end: '2026-10-31',
+      holidays: ['2026-10-05', '2026-10-09'], memberCount: 5, createdAt: Date.now() } },
+    members: { [sid]: {
+      '민수': { unavailable: { '2026-10-01': 'all', '2026-10-03': [9,10,11,12], '2026-10-10': 'all', '2026-10-17': [15,16,17,18,19,20] } },
+      '지영': { unavailable: { '2026-10-02': 'all', '2026-10-03': [17,18,19,20], '2026-10-11': 'all', '2026-10-24': 'all' } },
+      '현우': { unavailable: { '2026-10-06': 'all', '2026-10-04': 'all', '2026-10-25': [9,10,11,12,13,14] } },
+    } },
+  };
+  const go = new URLSearchParams(location.search).get('go') || 'session';
+  if (go === 'alt') {
+    const u = {}; for (let d = 1; d <= 31; d++) u[`2026-10-${String(d).padStart(2,'0')}`] = 'all';
+    delete u['2026-10-31'];
+    db.members[sid]['태호'] = { unavailable: u };
+    db.members[sid]['민수'].unavailable['2026-10-31'] = 'all';
+  }
+  localStorage.setItem('band-schedule', JSON.stringify(db));
+  const target = { session: `#/s/${sid}`, alt: `#/s/${sid}`, input: `#/s/${sid}/me?n=민수`, list: '#/' }[go];
+  location.replace(new URL('../' + target, location.href).href);
+}
+</script>

@@ -1,0 +1,15 @@
+{
+  "name": "영파이 합주 시간 취합",
+  "short_name": "영파이",
+  "description": "안 되는 시간만 표시하면 합주 가능한 날이 달력에 보여요.",
+  "start_url": "./#/home",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "lang": "ko",
+  "icons": [
+    { "src": "icons/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
